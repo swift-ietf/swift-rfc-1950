@@ -9,32 +9,32 @@ struct RFC1950Tests {
 
     // MARK: - Round-trip Tests
 
-    @Test("Single byte round-trip")
-    func singleByteRoundTrip() throws {
+    @Test
+    func `Single byte round-trip`() throws {
         let input: [UInt8] = [0x42]
         let compressed = RFC_1950.compress(input)
         let decompressed = try RFC_1950.decompress(compressed)
         #expect(decompressed == input)
     }
 
-    @Test("Short text round-trip")
-    func shortTextRoundTrip() throws {
+    @Test
+    func `Short text round-trip`() throws {
         let input = Array("Hello, World!".utf8)
         let compressed = RFC_1950.compress(input)
         let decompressed = try RFC_1950.decompress(compressed)
         #expect(decompressed == input)
     }
 
-    @Test("Highly compressible data round-trip")
-    func highlyCompressibleRoundTrip() throws {
+    @Test
+    func `Highly compressible data round-trip`() throws {
         let input = [UInt8](repeating: 0x41, count: 1000)
         let compressed = RFC_1950.compress(input)
         let decompressed = try RFC_1950.decompress(compressed)
         #expect(decompressed == input)
     }
 
-    @Test("Binary data with all byte values")
-    func allByteValuesRoundTrip() throws {
+    @Test
+    func `Binary data with all byte values`() throws {
         var input: [UInt8] = []
         for byte: UInt8 in 0...255 {
             input.append(byte)
@@ -47,8 +47,8 @@ struct RFC1950Tests {
 
     // MARK: - ZLIB Header Tests
 
-    @Test("ZLIB header is valid")
-    func zlibHeaderValid() throws {
+    @Test
+    func `ZLIB header is valid`() throws {
         let input = Array("Test".utf8)
         let compressed = RFC_1950.compress(input)
 
@@ -71,22 +71,22 @@ struct RFC1950Tests {
 
     // MARK: - Adler-32 Tests
 
-    @Test("Adler-32 of empty data")
-    func adler32Empty() {
+    @Test
+    func `Adler-32 of empty data`() {
         let checksum = RFC_1950.Adler32.checksum([])
         #expect(checksum == 1, "Adler-32 of empty data should be 1")
     }
 
-    @Test("Adler-32 of known values")
-    func adler32KnownValues() {
+    @Test
+    func `Adler-32 of known values`() {
         // "Wikipedia" example from Wikipedia article on Adler-32
         let input = Array("Wikipedia".utf8)
         let checksum = RFC_1950.Adler32.checksum(input)
         #expect(checksum == 0x11E6_0398)
     }
 
-    @Test("Adler-32 incremental matches one-shot")
-    func adler32Incremental() {
+    @Test
+    func `Adler-32 incremental matches one-shot`() {
         let input = Array("Hello, World!".utf8)
 
         // One-shot
@@ -121,22 +121,22 @@ struct RFC1950Tests {
 
     // MARK: - Error Tests
 
-    @Test("Empty input throws error")
-    func emptyInputError() {
+    @Test
+    func `Empty input throws error`() {
         #expect(throws: RFC_1950.Error.empty) {
             _ = try RFC_1950.decompress([])
         }
     }
 
-    @Test("Too short input throws error")
-    func tooShortError() {
+    @Test
+    func `Too short input throws error`() {
         #expect(throws: RFC_1950.Error.tooShort) {
             _ = try RFC_1950.decompress([0x78, 0x9C, 0x00])
         }
     }
 
-    @Test("Invalid compression method throws error")
-    func invalidCompressionMethodError() {
+    @Test
+    func `Invalid compression method throws error`() {
         // CMF with CM=0 (invalid, should be 8)
         let invalid: [UInt8] = [0x70, 0x00, 0x00, 0x00, 0x00, 0x01]
         #expect {
@@ -149,8 +149,8 @@ struct RFC1950Tests {
         }
     }
 
-    @Test("Invalid header checksum throws error")
-    func invalidHeaderChecksumError() {
+    @Test
+    func `Invalid header checksum throws error`() {
         // Valid CMF (0x78) but wrong FLG that fails checksum
         let invalid: [UInt8] = [0x78, 0x00, 0x00, 0x00, 0x00, 0x01]
         #expect {
@@ -163,8 +163,8 @@ struct RFC1950Tests {
         }
     }
 
-    @Test("Checksum mismatch throws error")
-    func checksumMismatchError() throws {
+    @Test
+    func `Checksum mismatch throws error`() throws {
         let input = Array("Test".utf8)
         var compressed = RFC_1950.compress(input)
 
@@ -183,8 +183,8 @@ struct RFC1950Tests {
 
     // MARK: - Wrap/Unwrap Tests
 
-    @Test("Unwrap extracts DEFLATE data")
-    func unwrapExtractsDeflate() throws {
+    @Test
+    func `Unwrap extracts DEFLATE data`() throws {
         let input = Array("Test data".utf8)
         let zlib = RFC_1950.compress(input)
 
@@ -195,8 +195,8 @@ struct RFC1950Tests {
         #expect(decompressed == input)
     }
 
-    @Test("Wrap produces valid ZLIB")
-    func wrapProducesValidZlib() throws {
+    @Test
+    func `Wrap produces valid ZLIB`() throws {
         let original = Array("Test data".utf8)
         let deflated = RFC_1951.compress(original)
 
@@ -210,8 +210,8 @@ struct RFC1950Tests {
 
     // MARK: - API Tests
 
-    @Test("Streaming API appends to existing buffer")
-    func streamingAPIAppendsToBuffer() throws {
+    @Test
+    func `Streaming API appends to existing buffer`() throws {
         let input = Array("Hello".utf8)
         var output: [UInt8] = [0xFF, 0xFE]
         RFC_1950.compress(input, into: &output)
