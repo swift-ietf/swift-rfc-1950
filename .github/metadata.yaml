@@ -1,0 +1,9 @@
+# .github/metadata.yaml
+# Triaged by AI-assisted bulk pass (2026-04-29).
+description: "Swift implementation of RFC 1950: ZLIB Compressed Data Format."
+topics:
+  - standards
+  - rfc
+  - rfc-1950
+  - compression
+homepage: "https://swift-institute.org"
