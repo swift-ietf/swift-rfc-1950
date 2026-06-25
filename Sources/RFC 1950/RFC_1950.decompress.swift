@@ -3,6 +3,7 @@
 import RFC_1951
 public import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
+internal import Binary_Primitives_Standard_Library_Integration
 
 extension RFC_1950 {
     /// Decompress ZLIB-formatted data
@@ -55,7 +56,7 @@ extension RFC_1950 {
         offset += 1
 
         // Verify header checksum
-        let headerValue = UInt16(cmf) << 8 | UInt16(flg)
+        let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big)!
         guard headerValue % 31 == 0 else {
             throw .invalidHeaderChecksum
         }
@@ -79,9 +80,7 @@ extension RFC_1950 {
 
         // Verify Adler-32 checksum
         let checksumOffset = inputArray.count - 4
-        let expectedChecksum =
-            UInt32(inputArray[checksumOffset]) << 24 | UInt32(inputArray[checksumOffset + 1]) << 16
-            | UInt32(inputArray[checksumOffset + 2]) << 8 | UInt32(inputArray[checksumOffset + 3])
+        let expectedChecksum = UInt32(bytes: inputArray[checksumOffset..<checksumOffset + 4], endianness: .big)!
 
         let actualChecksum = Adler32.checksum(output)
 

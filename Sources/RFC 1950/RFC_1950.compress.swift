@@ -2,6 +2,7 @@
 
 public import RFC_1951
 public import Byte_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
 
 extension RFC_1950 {
     /// Compress data using ZLIB format (DEFLATE with wrapper)
@@ -44,7 +45,7 @@ extension RFC_1950 {
 
         // FCHECK is set so that (CMF * 256 + FLG) is a multiple of 31
         let flgWithoutCheck = flevel << 6
-        let fcheck = (31 - Int((UInt16(cmf) << 8 | UInt16(flgWithoutCheck)) % 31)) % 31
+        let fcheck = (31 - Int(UInt16(bytes: [Byte(cmf), Byte(flgWithoutCheck)], endianness: .big)! % 31)) % 31
         let flg = flgWithoutCheck | UInt8(fcheck)
 
         output.append(Byte(cmf))
@@ -55,10 +56,7 @@ extension RFC_1950 {
 
         // Adler-32 checksum of uncompressed data (big-endian)
         let checksum = Adler32.checksum(inputArray)
-        output.append(Byte(UInt8((checksum >> 24) & 0xFF)))
-        output.append(Byte(UInt8((checksum >> 16) & 0xFF)))
-        output.append(Byte(UInt8((checksum >> 8) & 0xFF)))
-        output.append(Byte(UInt8(checksum & 0xFF)))
+        checksum.bytes(into: &output, endianness: .big)
     }
 
     /// Convenience: compress and return new array

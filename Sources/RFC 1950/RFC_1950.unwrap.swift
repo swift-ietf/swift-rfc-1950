@@ -2,6 +2,7 @@
 
 import RFC_1951
 public import Byte_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
 
 extension RFC_1950 {
     /// Unwrap ZLIB data to get raw DEFLATE stream
@@ -46,7 +47,7 @@ extension RFC_1950 {
 
         // Parse and validate FLG byte
         let flg = inputArray[1].underlying
-        let headerValue = UInt16(cmf) << 8 | UInt16(flg)
+        let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big)!
         guard headerValue % 31 == 0 else {
             throw .invalidHeaderChecksum
         }
