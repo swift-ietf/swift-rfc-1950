@@ -1,5 +1,7 @@
 // RFC_1950.Error.swift
 
+public import Byte_Primitives
+
 extension RFC_1950 {
     /// Errors that can occur during ZLIB decompression
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -10,10 +12,10 @@ extension RFC_1950 {
         case tooShort
 
         /// Invalid compression method (must be 8 for DEFLATE)
-        case invalidCompressionMethod(_ value: UInt8)
+        case invalidCompressionMethod(_ value: Byte)
 
         /// Invalid window size (CINFO must be <= 7)
-        case invalidWindowSize(_ cinfo: UInt8)
+        case invalidWindowSize(_ cinfo: Byte)
 
         /// Header checksum (FCHECK) is invalid
         case invalidHeaderChecksum

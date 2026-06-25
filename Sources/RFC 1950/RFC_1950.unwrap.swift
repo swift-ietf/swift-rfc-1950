@@ -37,11 +37,11 @@ extension RFC_1950 {
         let cinfo = (cmf >> 4) & 0x0F
 
         guard cm == 8 else {
-            throw .invalidCompressionMethod(cm)
+            throw .invalidCompressionMethod(Byte(cm))
         }
 
         guard cinfo <= 7 else {
-            throw .invalidWindowSize(cinfo)
+            throw .invalidWindowSize(Byte(cinfo))
         }
 
         // Parse and validate FLG byte
