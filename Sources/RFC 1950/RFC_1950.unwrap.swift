@@ -1,6 +1,7 @@
 // RFC_1950.unwrap.swift
 
 import RFC_1951
+public import Byte_Primitives
 
 extension RFC_1950 {
     /// Unwrap ZLIB data to get raw DEFLATE stream
@@ -19,7 +20,7 @@ extension RFC_1950 {
     /// ```
     public static func unwrap<Input>(
         _ input: Input
-    ) throws(Error) -> ArraySlice<UInt8> where Input: Collection, Input.Element == UInt8 {
+    ) throws(Error) -> ArraySlice<Byte> where Input: Collection, Input.Element == Byte {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -31,7 +32,7 @@ extension RFC_1950 {
         let inputArray = Array(input)
 
         // Parse and validate CMF byte
-        let cmf = inputArray[0]
+        let cmf = inputArray[0].underlying
         let cm = cmf & 0x0F
         let cinfo = (cmf >> 4) & 0x0F
 
@@ -44,7 +45,7 @@ extension RFC_1950 {
         }
 
         // Parse and validate FLG byte
-        let flg = inputArray[1]
+        let flg = inputArray[1].underlying
         let headerValue = UInt16(cmf) << 8 | UInt16(flg)
         guard headerValue % 31 == 0 else {
             throw .invalidHeaderChecksum

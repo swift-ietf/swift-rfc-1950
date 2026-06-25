@@ -1,6 +1,8 @@
 // RFC_1950.decompress.swift
 
 import RFC_1951
+public import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
 
 extension RFC_1950 {
     /// Decompress ZLIB-formatted data
@@ -13,13 +15,13 @@ extension RFC_1950 {
     /// ## Example
     ///
     /// ```swift
-    /// var decompressed: [UInt8] = []
+    /// var decompressed: [Byte] = []
     /// try RFC_1950.decompress(compressed, into: &decompressed)
     /// ```
     public static func decompress<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) throws(Error) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -34,7 +36,7 @@ extension RFC_1950 {
         var offset = 0
 
         // Parse CMF byte
-        let cmf = inputArray[offset]
+        let cmf = inputArray[offset].underlying
         offset += 1
 
         let cm = cmf & 0x0F  // Compression method
@@ -49,7 +51,7 @@ extension RFC_1950 {
         }
 
         // Parse FLG byte
-        let flg = inputArray[offset]
+        let flg = inputArray[offset].underlying
         offset += 1
 
         // Verify header checksum
@@ -95,8 +97,8 @@ extension RFC_1950 {
     /// - Throws: `Error` if the data is invalid or corrupted
     public static func decompress<Bytes>(
         _ input: Bytes
-    ) throws(Error) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
-        var output: [UInt8] = []
+    ) throws(Error) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+        var output: [Byte] = []
         try decompress(input, into: &output)
         return output
     }

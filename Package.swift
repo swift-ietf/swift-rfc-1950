@@ -17,20 +17,25 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-primitives/swift-standard-library-extensions.git", branch: "main"),
-        .package(url: "https://github.com/swift-ietf/swift-rfc-1951.git", branch: "main")
+        .package(url: "https://github.com/swift-ietf/swift-rfc-1951.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-byte-primitives.git", branch: "main")
     ],
     targets: [
         .target(
             name: "RFC 1950",
             dependencies: [
                 .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
-                .product(name: "RFC 1951", package: "swift-rfc-1951")
+                .product(name: "RFC 1951", package: "swift-rfc-1951"),
+                .product(name: "Byte Primitives", package: "swift-byte-primitives"),
+                .product(name: "Byte Primitives Standard Library Integration", package: "swift-byte-primitives")
             ]
         ),
         .testTarget(
             name: "RFC 1950 Tests",
             dependencies: [
                 "RFC 1950",
+                .product(name: "Byte Primitives", package: "swift-byte-primitives"),
+                .product(name: "Byte Primitives Standard Library Integration", package: "swift-byte-primitives")
             ]
         ),
     ],

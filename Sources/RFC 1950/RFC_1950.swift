@@ -15,11 +15,11 @@
 ///
 /// ```swift
 /// // Compress data with ZLIB wrapper
-/// var compressed: [UInt8] = []
+/// var compressed: [Byte] = []
 /// RFC_1950.compress(input, into: &compressed)
 ///
 /// // Decompress ZLIB data
-/// var decompressed: [UInt8] = []
+/// var decompressed: [Byte] = []
 /// try RFC_1950.decompress(compressed, into: &decompressed)
 /// ```
 ///

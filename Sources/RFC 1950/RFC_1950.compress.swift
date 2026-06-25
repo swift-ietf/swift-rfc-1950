@@ -1,6 +1,7 @@
 // RFC_1950.compress.swift
 
 public import RFC_1951
+public import Byte_Primitives
 
 extension RFC_1950 {
     /// Compress data using ZLIB format (DEFLATE with wrapper)
@@ -13,14 +14,14 @@ extension RFC_1950 {
     /// ## Example
     ///
     /// ```swift
-    /// var compressed: [UInt8] = []
+    /// var compressed: [Byte] = []
     /// RFC_1950.compress(data, into: &compressed)
     /// ```
     public static func compress<Input, Output>(
         _ input: Input,
         into output: inout Output,
         level: RFC_1951.Level = .balanced
-    ) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         let inputArray = Array(input)
 
         // ZLIB header (2 bytes)
@@ -46,18 +47,18 @@ extension RFC_1950 {
         let fcheck = (31 - Int((UInt16(cmf) << 8 | UInt16(flgWithoutCheck)) % 31)) % 31
         let flg = flgWithoutCheck | UInt8(fcheck)
 
-        output.append(cmf)
-        output.append(flg)
+        output.append(Byte(cmf))
+        output.append(Byte(flg))
 
         // DEFLATE compressed data
         RFC_1951.compress(inputArray, into: &output, level: level)
 
         // Adler-32 checksum of uncompressed data (big-endian)
         let checksum = Adler32.checksum(inputArray)
-        output.append(UInt8((checksum >> 24) & 0xFF))
-        output.append(UInt8((checksum >> 16) & 0xFF))
-        output.append(UInt8((checksum >> 8) & 0xFF))
-        output.append(UInt8(checksum & 0xFF))
+        output.append(Byte(UInt8((checksum >> 24) & 0xFF)))
+        output.append(Byte(UInt8((checksum >> 16) & 0xFF)))
+        output.append(Byte(UInt8((checksum >> 8) & 0xFF)))
+        output.append(Byte(UInt8(checksum & 0xFF)))
     }
 
     /// Convenience: compress and return new array
@@ -69,8 +70,8 @@ extension RFC_1950 {
     public static func compress<Bytes>(
         _ input: Bytes,
         level: RFC_1951.Level = .balanced
-    ) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
-        var output: [UInt8] = []
+    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+        var output: [Byte] = []
         compress(input, into: &output, level: level)
         return output
     }

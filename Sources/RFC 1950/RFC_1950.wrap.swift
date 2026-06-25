@@ -1,6 +1,7 @@
 // RFC_1950.wrap.swift
 
 public import RFC_1951
+public import Byte_Primitives
 
 extension RFC_1950 {
     /// Wrap already-DEFLATE-compressed data in ZLIB format
@@ -17,7 +18,7 @@ extension RFC_1950 {
     ///
     /// ```swift
     /// let deflated = RFC_1951.compress(original)
-    /// var zlib: [UInt8] = []
+    /// var zlib: [Byte] = []
     /// RFC_1950.wrap(deflated: deflated, level: .balanced, originalData: original, into: &zlib)
     /// ```
     public static func wrap<Deflated, Original, Output>(
@@ -25,7 +26,7 @@ extension RFC_1950 {
         level: RFC_1951.Level,
         originalData: Original,
         into output: inout Output
-    ) where Deflated: Collection, Deflated.Element == UInt8, Original: Collection, Original.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) where Deflated: Collection, Deflated.Element == Byte, Original: Collection, Original.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         // CMF byte: CM=8 (DEFLATE), CINFO=7 (32K window)
         let cmf: UInt8 = 0x78
 
@@ -42,17 +43,17 @@ extension RFC_1950 {
         let fcheck = (31 - Int((UInt16(cmf) << 8 | UInt16(flgWithoutCheck)) % 31)) % 31
         let flg = flgWithoutCheck | UInt8(fcheck)
 
-        output.append(cmf)
-        output.append(flg)
+        output.append(Byte(cmf))
+        output.append(Byte(flg))
 
         // DEFLATE data
         output.append(contentsOf: deflated)
 
         // Adler-32 checksum of original uncompressed data (big-endian)
         let checksum = Adler32.checksum(originalData)
-        output.append(UInt8((checksum >> 24) & 0xFF))
-        output.append(UInt8((checksum >> 16) & 0xFF))
-        output.append(UInt8((checksum >> 8) & 0xFF))
-        output.append(UInt8(checksum & 0xFF))
+        output.append(Byte(UInt8((checksum >> 24) & 0xFF)))
+        output.append(Byte(UInt8((checksum >> 16) & 0xFF)))
+        output.append(Byte(UInt8((checksum >> 8) & 0xFF)))
+        output.append(Byte(UInt8(checksum & 0xFF)))
     }
 }
