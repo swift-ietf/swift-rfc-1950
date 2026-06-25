@@ -4,6 +4,7 @@ import RFC_1951
 public import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
 internal import Binary_Primitives_Standard_Library_Integration
+internal import Binary_Endianness_Primitives
 
 extension RFC_1950 {
     /// Decompress ZLIB-formatted data
