@@ -1,10 +1,10 @@
 // RFC_1950.decompress.swift
 
-import RFC_1951
+internal import Binary_Endianness_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
 public import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
-internal import Binary_Primitives_Standard_Library_Integration
-internal import Binary_Endianness_Primitives
+import RFC_1951
 
 extension RFC_1950 {
     /// Decompress ZLIB-formatted data

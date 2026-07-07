@@ -1,9 +1,9 @@
 // RFC_1950.compress.swift
 
-public import RFC_1951
-public import Byte_Primitives
-internal import Binary_Primitives_Standard_Library_Integration
 internal import Binary_Endianness_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
+public import Byte_Primitives
+public import RFC_1951
 
 extension RFC_1950 {
     /// Compress data using ZLIB format (DEFLATE with wrapper)

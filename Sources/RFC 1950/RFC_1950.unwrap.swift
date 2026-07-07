@@ -1,9 +1,9 @@
 // RFC_1950.unwrap.swift
 
-import RFC_1951
-public import Byte_Primitives
-internal import Binary_Primitives_Standard_Library_Integration
 internal import Binary_Endianness_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
+public import Byte_Primitives
+import RFC_1951
 
 extension RFC_1950 {
     /// Unwrap ZLIB data to get raw DEFLATE stream
