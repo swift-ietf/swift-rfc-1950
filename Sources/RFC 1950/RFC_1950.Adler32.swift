@@ -27,9 +27,6 @@ extension RFC_1950 {
     /// let checksum = adler.value
     /// ```
     public struct Adler32: Sendable, Hashable {
-        /// Modulo value for Adler-32 (largest prime less than 2^16)
-        private static let base: UInt32 = 65521
-
         /// Running sum of all bytes
         private var s1: UInt32
 
@@ -52,50 +49,55 @@ extension RFC_1950 {
             self.s1 = seed & 0xFFFF
             self.s2 = (seed >> 16) & 0xFFFF
         }
+    }
+}
 
-        /// Update the checksum with additional bytes
-        ///
-        /// - Parameter bytes: Bytes to include in the checksum
-        public mutating func update<Bytes: Collection>(_ bytes: Bytes)
-        where Bytes.Element == Byte {
-            // Process in chunks to avoid overflow
-            // We can process up to 5552 bytes before needing to take modulo
-            // (because 255 * 5552 + 65520 < 2^32)
-            let chunkSize = 5552
+extension RFC_1950.Adler32 {
+    /// Modulo value for Adler-32 (largest prime less than 2^16)
+    private static let base: UInt32 = 65521
 
-            var iterator = bytes.makeIterator()
-            var remaining = bytes.count
+    /// Update the checksum with additional bytes
+    ///
+    /// - Parameter bytes: Bytes to include in the checksum
+    public mutating func update<Bytes: Collection>(_ bytes: Bytes)
+    where Bytes.Element == Byte {
+        // Process in chunks to avoid overflow
+        // We can process up to 5552 bytes before needing to take modulo
+        // (because 255 * 5552 + 65520 < 2^32)
+        let chunkSize = 5552
 
-            while remaining > 0 {
-                let batchSize = min(remaining, chunkSize)
-                remaining -= batchSize
+        var iterator = bytes.makeIterator()
+        var remaining = bytes.count
 
-                for _ in 0..<batchSize {
-                    if let byte = iterator.next() {
-                        s1 += UInt32(byte)
-                        s2 += s1
-                    }
+        while remaining > 0 {
+            let batchSize = min(remaining, chunkSize)
+            remaining -= batchSize
+
+            for _ in 0..<batchSize {
+                if let byte = iterator.next() {
+                    s1 += UInt32(byte)
+                    s2 += s1
                 }
-
-                s1 %= Self.base
-                s2 %= Self.base
             }
-        }
 
-        /// The current checksum value
-        public var value: UInt32 {
-            (s2 << 16) | s1
+            s1 %= Self.base
+            s2 %= Self.base
         }
+    }
 
-        /// Calculate checksum for a collection of bytes in one call
-        ///
-        /// - Parameter bytes: The bytes to checksum
-        /// - Returns: The Adler-32 checksum
-        public static func checksum<Bytes: Collection>(_ bytes: Bytes) -> UInt32
-        where Bytes.Element == Byte {
-            var adler = Adler32()
-            adler.update(bytes)
-            return adler.value
-        }
+    /// The current checksum value
+    public var value: UInt32 {
+        (s2 << 16) | s1
+    }
+
+    /// Calculate checksum for a collection of bytes in one call
+    ///
+    /// - Parameter bytes: The bytes to checksum
+    /// - Returns: The Adler-32 checksum
+    public static func checksum<Bytes: Collection>(_ bytes: Bytes) -> UInt32
+    where Bytes.Element == Byte {
+        var adler = RFC_1950.Adler32()
+        adler.update(bytes)
+        return adler.value
     }
 }

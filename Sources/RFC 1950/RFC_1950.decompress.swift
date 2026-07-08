@@ -73,9 +73,9 @@ extension RFC_1950 {
         let deflateData = inputArray[offset..<(inputArray.count - 4)]
 
         // Decompress DEFLATE data
-        do {
+        do throws(RFC_1951.Error) {
             try RFC_1951.decompress(deflateData, into: &output)
-        } catch let error {
+        } catch {
             throw .deflateError(error)
         }
 
