@@ -72,6 +72,10 @@ extension RFC_1950 {
         // Extract DEFLATE data (everything except header and trailer)
         let deflateData = inputArray[offset..<(inputArray.count - 4)]
 
+        // RFC_1951.decompress appends to `output`; remember how much was already
+        // there so the Adler-32 check covers only the appended suffix.
+        let preexistingCount = output.count
+
         // Decompress DEFLATE data
         do throws(RFC_1951.Error) {
             try RFC_1951.decompress(deflateData, into: &output)
@@ -83,7 +87,7 @@ extension RFC_1950 {
         let checksumOffset = inputArray.count - 4
         let expectedChecksum = UInt32(bytes: inputArray[checksumOffset..<checksumOffset + 4], endianness: .big)!
 
-        let actualChecksum = Adler32.checksum(output)
+        let actualChecksum = Adler32.checksum(output.dropFirst(preexistingCount))
 
         guard expectedChecksum == actualChecksum else {
             throw .checksumMismatch(expected: expectedChecksum, actual: actualChecksum)
