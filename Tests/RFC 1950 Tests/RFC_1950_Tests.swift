@@ -5,8 +5,8 @@ import Testing
 
 @testable import RFC_1950
 
-@Suite("RFC 1950 - ZLIB Compression")
-struct RFC1950Tests {
+extension RFC_1950 {
+    @Suite struct Unit {
 
     // MARK: - Round-trip Tests
 
@@ -220,5 +220,6 @@ struct RFC1950Tests {
         #expect(output[0] == 0xFF)
         #expect(output[1] == 0xFE)
         #expect(output.count > 2)
+    }
     }
 }
