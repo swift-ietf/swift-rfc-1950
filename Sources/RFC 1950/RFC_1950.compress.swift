@@ -23,7 +23,7 @@ extension RFC_1950 {
         _ input: Input,
         into output: inout Output,
         level: RFC_1951.Level = .balanced
-    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         let inputArray = Array(input)
 
         // ZLIB header (2 bytes)
@@ -69,7 +69,7 @@ extension RFC_1950 {
     public static func compress<Bytes>(
         _ input: Bytes,
         level: RFC_1951.Level = .balanced
-    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+    ) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
         var output: [Byte] = []
         compress(input, into: &output, level: level)
         return output

@@ -23,7 +23,7 @@ extension RFC_1950 {
     public static func decompress<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) throws(Error) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -101,7 +101,7 @@ extension RFC_1950 {
     /// - Throws: `Error` if the data is invalid or corrupted
     public static func decompress<Bytes>(
         _ input: Bytes
-    ) throws(Error) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+    ) throws(Error) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
         var output: [Byte] = []
         try decompress(input, into: &output)
         return output

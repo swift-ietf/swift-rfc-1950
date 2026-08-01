@@ -22,7 +22,7 @@ extension RFC_1950 {
     /// ```
     public static func unwrap<Input>(
         _ input: Input
-    ) throws(Error) -> ArraySlice<Byte> where Input: Collection, Input.Element == Byte {
+    ) throws(Error) -> ArraySlice<Byte> where Input: Swift.Collection, Input.Element == Byte {
         guard !input.isEmpty else {
             throw .empty
         }

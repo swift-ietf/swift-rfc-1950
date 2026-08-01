@@ -59,7 +59,7 @@ extension RFC_1950.Adler32 {
     /// Update the checksum with additional bytes
     ///
     /// - Parameter bytes: Bytes to include in the checksum
-    public mutating func update<Bytes: Collection>(_ bytes: Bytes)
+    public mutating func update<Bytes: Swift.Collection>(_ bytes: Bytes)
     where Bytes.Element == Byte {
         // Process in chunks to avoid overflow
         // We can process up to 5552 bytes before needing to take modulo
@@ -94,7 +94,7 @@ extension RFC_1950.Adler32 {
     ///
     /// - Parameter bytes: The bytes to checksum
     /// - Returns: The Adler-32 checksum
-    public static func checksum<Bytes: Collection>(_ bytes: Bytes) -> UInt32
+    public static func checksum<Bytes: Swift.Collection>(_ bytes: Bytes) -> UInt32
     where Bytes.Element == Byte {
         var adler = RFC_1950.Adler32()
         adler.update(bytes)

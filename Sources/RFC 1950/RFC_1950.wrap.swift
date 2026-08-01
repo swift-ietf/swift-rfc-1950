@@ -28,7 +28,7 @@ extension RFC_1950 {
         level: RFC_1951.Level,
         originalData: Original,
         into output: inout Output
-    ) where Deflated: Collection, Deflated.Element == Byte, Original: Collection, Original.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) where Deflated: Swift.Collection, Deflated.Element == Byte, Original: Swift.Collection, Original.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         // CMF byte: CM=8 (DEFLATE), CINFO=7 (32K window)
         let cmf: UInt8 = 0x78
 
