@@ -23,7 +23,11 @@ extension RFC_1950 {
         _ input: Input,
         into output: inout Output,
         level: RFC_1951.Level = .balanced
-    ) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    )
+    where
+        Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Output.Element == Byte
+    {
         let inputArray = Array(input)
 
         // ZLIB header (2 bytes)
@@ -46,7 +50,9 @@ extension RFC_1950 {
 
         // FCHECK is set so that (CMF * 256 + FLG) is a multiple of 31
         let flgWithoutCheck = flevel << 6
-        let fcheck = (31 - Int(UInt16(bytes: [Byte(cmf), Byte(flgWithoutCheck)], endianness: .big)! % 31)) % 31
+        let fcheck =
+            (31 - Int(UInt16(bytes: [Byte(cmf), Byte(flgWithoutCheck)], endianness: .big)! % 31))
+            % 31
         let flg = flgWithoutCheck | UInt8(fcheck)
 
         output.append(Byte(cmf))
