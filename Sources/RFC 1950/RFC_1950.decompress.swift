@@ -23,7 +23,11 @@ extension RFC_1950 {
     public static func decompress<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) throws(Error)
+    where
+        Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Output.Element == Byte
+    {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -85,7 +89,10 @@ extension RFC_1950 {
 
         // Verify Adler-32 checksum
         let checksumOffset = inputArray.count - 4
-        let expectedChecksum = UInt32(bytes: inputArray[checksumOffset..<checksumOffset + 4], endianness: .big)!
+        let expectedChecksum = UInt32(
+            bytes: inputArray[checksumOffset..<checksumOffset + 4],
+            endianness: .big
+        )!
 
         let actualChecksum = Adler32.checksum(output.dropFirst(preexistingCount))
 
