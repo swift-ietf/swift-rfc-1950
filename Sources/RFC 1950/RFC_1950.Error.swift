@@ -1,32 +1,23 @@
-// RFC_1950.Error.swift
-
 public import Byte_Primitives
 
 extension RFC_1950 {
-    /// Errors that can occur during ZLIB decompression
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Input data is empty
+
         case empty
 
-        /// Input data is too short (less than 6 bytes minimum)
         case tooShort
 
-        /// Invalid compression method (must be 8 for DEFLATE)
         case invalidCompressionMethod(_ value: Byte)
 
-        /// Invalid window size (CINFO must be <= 7)
         case invalidWindowSize(_ cinfo: Byte)
 
-        /// Header checksum (FCHECK) is invalid
         case invalidHeaderChecksum
 
-        /// Preset dictionary is required but not provided
         case presetDictionaryRequired
 
-        /// Adler-32 checksum mismatch
         case checksumMismatch(expected: UInt32, actual: UInt32)
 
-        /// DEFLATE decompression error
         case deflateError(RFC_1951.Error)
     }
 }

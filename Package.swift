@@ -2,7 +2,6 @@
 
 import PackageDescription
 
-// RFC 1950: ZLIB Compressed Data Format Specification
 let package = Package(
     name: "swift-rfc-1950",
     platforms: [
