@@ -1,6 +1,6 @@
-internal import Binary_Endianness_Primitives
-internal import Binary_Primitives_Standard_Library_Integration
-public import Byte_Primitives
+internal import Binary_Endianness
+internal import Binary_Standard_Library_Integration
+public import Byte
 import RFC_1951
 
 extension RFC_1950 {
