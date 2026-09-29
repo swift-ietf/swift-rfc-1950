@@ -8,7 +8,7 @@ extension RFC_1950 {
 
         @Test
         func `Single byte round-trip`() throws {
-            let input: [Byte] = [0x42]
+            let input: [Byte] = [Byte(0x42)]
             let compressed = RFC_1950.compress(input)
             let decompressed = try RFC_1950.decompress(compressed)
             #expect(decompressed == input)
@@ -16,7 +16,7 @@ extension RFC_1950 {
 
         @Test
         func `Short text round-trip`() throws {
-            let input = "Hello, World!".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Hello, World!")
             let compressed = RFC_1950.compress(input)
             let decompressed = try RFC_1950.decompress(compressed)
             #expect(decompressed == input)
@@ -24,7 +24,7 @@ extension RFC_1950 {
 
         @Test
         func `Highly compressible data round-trip`() throws {
-            let input = [Byte](repeating: 0x41, count: 1000)
+            let input = [Byte](repeating: Byte(0x41), count: 1000)
             let compressed = RFC_1950.compress(input)
             let decompressed = try RFC_1950.decompress(compressed)
             #expect(decompressed == input)
@@ -44,7 +44,7 @@ extension RFC_1950 {
 
         @Test
         func `ZLIB header is valid`() throws {
-            let input = "Test".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Test")
             let compressed = RFC_1950.compress(input)
 
             #expect(compressed.count >= 6)
@@ -69,14 +69,14 @@ extension RFC_1950 {
         @Test
         func `Adler-32 of known values`() {
 
-            let input = "Wikipedia".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Wikipedia")
             let checksum = RFC_1950.Adler32.checksum(input)
             #expect(checksum == 0x11E6_0398)
         }
 
         @Test
         func `Adler-32 incremental matches one-shot`() {
-            let input = "Hello, World!".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Hello, World!")
 
             let oneShot = RFC_1950.Adler32.checksum(input)
 
@@ -97,7 +97,7 @@ extension RFC_1950 {
             ]
         )
         func `All compression levels produce valid output`(level: RFC_1951.Level) throws {
-            let input = "The quick brown fox jumps over the lazy dog.".utf8.map(Byte.init)
+            let input = [Byte](utf8: "The quick brown fox jumps over the lazy dog.")
             let compressed = RFC_1950.compress(input, level: level)
             let decompressed = try RFC_1950.decompress(compressed)
             #expect(decompressed == input)
@@ -113,14 +113,14 @@ extension RFC_1950 {
         @Test
         func `Too short input throws error`() {
             #expect(throws: RFC_1950.Error.tooShort) {
-                _ = try RFC_1950.decompress([0x78, 0x9C, 0x00] as [Byte])
+                _ = try RFC_1950.decompress([Byte(0x78), Byte(0x9C), Byte(0x00)] as [Byte])
             }
         }
 
         @Test
         func `Invalid compression method throws error`() {
 
-            let invalid: [Byte] = [0x70, 0x00, 0x00, 0x00, 0x00, 0x01]
+            let invalid: [Byte] = [Byte(0x70), Byte(0x00), Byte(0x00), Byte(0x00), Byte(0x00), Byte(0x01)]
             #expect {
                 _ = try RFC_1950.decompress(invalid)
             } throws: { error in
@@ -134,7 +134,7 @@ extension RFC_1950 {
         @Test
         func `Invalid header checksum throws error`() {
 
-            let invalid: [Byte] = [0x78, 0x00, 0x00, 0x00, 0x00, 0x01]
+            let invalid: [Byte] = [Byte(0x78), Byte(0x00), Byte(0x00), Byte(0x00), Byte(0x00), Byte(0x01)]
             #expect {
                 _ = try RFC_1950.decompress(invalid)
             } throws: { error in
@@ -147,7 +147,7 @@ extension RFC_1950 {
 
         @Test
         func `Checksum mismatch throws error`() throws {
-            let input = "Test".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Test")
             var compressed = RFC_1950.compress(input)
 
             let last = compressed.count - 1
@@ -165,7 +165,7 @@ extension RFC_1950 {
 
         @Test
         func `Unwrap extracts DEFLATE data`() throws {
-            let input = "Test data".utf8.map(Byte.init)
+            let input = [Byte](utf8: "Test data")
             let zlib = RFC_1950.compress(input)
 
             let deflate = try RFC_1950.unwrap(zlib)
@@ -176,7 +176,7 @@ extension RFC_1950 {
 
         @Test
         func `Wrap produces valid ZLIB`() throws {
-            let original = "Test data".utf8.map(Byte.init)
+            let original = [Byte](utf8: "Test data")
             let deflated = RFC_1951.compress(original)
 
             var zlib: [Byte] = []
@@ -188,12 +188,12 @@ extension RFC_1950 {
 
         @Test
         func `Streaming API appends to existing buffer`() throws {
-            let input = "Hello".utf8.map(Byte.init)
-            var output: [Byte] = [0xFF, 0xFE]
+            let input = [Byte](utf8: "Hello")
+            var output: [Byte] = [Byte(0xFF), Byte(0xFE)]
             RFC_1950.compress(input, into: &output)
 
-            #expect(output[0] == 0xFF)
-            #expect(output[1] == 0xFE)
+            #expect(output[0] == Byte(0xFF))
+            #expect(output[1] == Byte(0xFE))
             #expect(output.count > 2)
         }
     }

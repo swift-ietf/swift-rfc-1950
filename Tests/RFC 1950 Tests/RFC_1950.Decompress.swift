@@ -12,18 +12,18 @@ extension RFC_1950 {
 extension RFC_1950.Decompress.`Edge Case` {
     @Test
     func `decompress appends to a non-empty output buffer`() throws {
-        let payload = "Hello, World!".utf8.map(Byte.init)
+        let payload = [Byte](utf8: "Hello, World!")
         let compressed = RFC_1950.compress(payload)
 
-        var output: [Byte] = [0xDE, 0xAD, 0xBE]
+        var output: [Byte] = [Byte(0xDE), Byte(0xAD), Byte(0xBE)]
         try RFC_1950.decompress(compressed, into: &output)
 
-        #expect(output == [0xDE, 0xAD, 0xBE] + payload)
+        #expect(output == [Byte(0xDE), Byte(0xAD), Byte(0xBE)] + payload)
     }
 
     @Test
     func `decompress into empty buffer still verifies checksum`() throws {
-        let payload = [Byte](repeating: 0x41, count: 64)
+        let payload = [Byte](repeating: Byte(0x41), count: 64)
         var compressed = RFC_1950.compress(payload)
 
         let last = compressed.count - 1

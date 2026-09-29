@@ -39,7 +39,7 @@ extension RFC_1950.Adler32 {
 
             for _ in 0..<batchSize {
                 if let byte = iterator.next() {
-                    s1 += UInt32(byte)
+                    s1 += UInt32(byte.underlying)
                     s2 += s1
                 }
             }
