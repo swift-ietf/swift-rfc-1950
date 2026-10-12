@@ -1,7 +1,6 @@
 internal import Binary
 internal import Binary
 public import Byte
-internal import Byte
 import RFC_1951
 
 extension RFC_1950 {
@@ -11,7 +10,7 @@ extension RFC_1950 {
         into output: inout Output
     ) throws(Error)
     where
-        Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         guard !input.isEmpty else {
@@ -78,7 +77,7 @@ extension RFC_1950 {
 
     public static func decompress<Bytes>(
         _ input: Bytes
-    ) throws(Error) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
+    ) throws(Error) -> [Byte] where Bytes: Swift::Collection, Bytes.Element == Byte {
         var output: [Byte] = []
         try decompress(input, into: &output)
         return output

@@ -12,7 +12,7 @@ extension RFC_1950 {
         into output: inout Output
     )
     where
-        Deflated: Swift.Collection, Deflated.Element == Byte, Original: Swift.Collection,
+        Deflated: Swift::Collection, Deflated.Element == Byte, Original: Swift::Collection,
         Original.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte
     {
 

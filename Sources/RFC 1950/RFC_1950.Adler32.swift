@@ -1,5 +1,4 @@
 public import Byte
-internal import Byte
 
 extension RFC_1950 {
 
@@ -25,7 +24,7 @@ extension RFC_1950.Adler32 {
 
     private static let base: UInt32 = 65521
 
-    public mutating func update<Bytes: Swift.Collection>(_ bytes: Bytes)
+    public mutating func update<Bytes: Swift::Collection>(_ bytes: Bytes)
     where Bytes.Element == Byte {
 
         let chunkSize = 5552
@@ -53,7 +52,7 @@ extension RFC_1950.Adler32 {
         (s2 << 16) | s1
     }
 
-    public static func checksum<Bytes: Swift.Collection>(_ bytes: Bytes) -> UInt32
+    public static func checksum<Bytes: Swift::Collection>(_ bytes: Bytes) -> UInt32
     where Bytes.Element == Byte {
         var adler = RFC_1950.Adler32()
         adler.update(bytes)
