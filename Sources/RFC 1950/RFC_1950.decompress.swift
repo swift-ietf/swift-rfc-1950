@@ -1,5 +1,4 @@
 internal import Binary
-internal import Binary
 public import Byte
 import RFC_1951
 
@@ -10,7 +9,9 @@ extension RFC_1950 {
         into output: inout Output
     ) throws(Error)
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         guard !input.isEmpty else {
@@ -41,7 +42,9 @@ extension RFC_1950 {
         let flg = inputArray[offset].underlying
         offset += 1
 
-        let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big)!
+        guard let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big) else {
+            preconditionFailure("The input holds at least the two header bytes")
+        }
         guard headerValue % 31 == 0 else {
             throw .invalidHeaderChecksum
         }
@@ -63,10 +66,14 @@ extension RFC_1950 {
         }
 
         let checksumOffset = inputArray.count - 4
-        let expectedChecksum = UInt32(
-            bytes: inputArray[checksumOffset..<checksumOffset + 4],
-            endianness: .big
-        )!
+        guard
+            let expectedChecksum = UInt32(
+                bytes: inputArray[checksumOffset..<checksumOffset + 4],
+                endianness: .big
+            )
+        else {
+            preconditionFailure("The input holds a four-byte Adler-32 trailer")
+        }
 
         let actualChecksum = Adler32.checksum(output.dropFirst(preexistingCount))
 

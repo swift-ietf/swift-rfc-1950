@@ -1,5 +1,4 @@
 internal import Binary
-internal import Binary
 public import Byte
 import RFC_1951
 
@@ -31,7 +30,9 @@ extension RFC_1950 {
         }
 
         let flg = inputArray[1].underlying
-        let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big)!
+        guard let headerValue = UInt16(bytes: inputArray[0..<2], endianness: .big) else {
+            preconditionFailure("The input holds at least the two header bytes")
+        }
         guard headerValue % 31 == 0 else {
             throw .invalidHeaderChecksum
         }

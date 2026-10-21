@@ -1,5 +1,4 @@
 internal import Binary
-internal import Binary
 public import Byte
 public import RFC_1951
 
@@ -11,7 +10,9 @@ extension RFC_1950 {
         level: RFC_1951.Level = .balanced
     )
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         let inputArray = Array(input)
@@ -28,7 +29,7 @@ extension RFC_1950 {
 
         let flgWithoutCheck = flevel << 6
         let fcheck =
-            (31 - Int(UInt16(bytes: [Byte(cmf), Byte(flgWithoutCheck)], endianness: .big)! % 31))
+            (31 - Int((UInt16(cmf) << 8 | UInt16(flgWithoutCheck)) % 31))
             % 31
         let flg = flgWithoutCheck | UInt8(fcheck)
 
