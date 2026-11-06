@@ -3,7 +3,9 @@ import Testing
 
 @testable import RFC_1950
 
-extension RFC_1950 {
+enum `RFC_1950 Tests` {}
+
+extension `RFC_1950 Tests` {
     @Suite struct Unit {
 
         @Test

@@ -3,13 +3,13 @@ import Testing
 
 @testable import RFC_1950
 
-extension RFC_1950 {
+extension `RFC_1950 Tests` {
     @Suite struct Decompress {
         @Suite struct `Edge Case` {}
     }
 }
 
-extension RFC_1950.Decompress.`Edge Case` {
+extension `RFC_1950 Tests`.Decompress.`Edge Case` {
     @Test
     func `decompress appends to a non-empty output buffer`() throws {
         let payload = [Byte](utf8: "Hello, World!")
