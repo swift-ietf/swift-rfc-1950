@@ -4,9 +4,11 @@ extension RFC_1950 {
 
     public struct Adler32: Sendable, Hashable {
 
-        private var s1: UInt32
+        @usableFromInline
+        var s1: UInt32
 
-        private var s2: UInt32
+        @usableFromInline
+        var s2: UInt32
 
         public init() {
             self.s1 = 1
@@ -22,8 +24,10 @@ extension RFC_1950 {
 
 extension RFC_1950.Adler32 {
 
-    private static let base: UInt32 = 65521
+    @usableFromInline
+    static var base: UInt32 { 65521 }
 
+    @inlinable
     public mutating func update<Bytes: Swift::Collection>(_ bytes: Bytes)
     where Bytes.Element == Byte {
 
@@ -52,6 +56,7 @@ extension RFC_1950.Adler32 {
         (s2 << 16) | s1
     }
 
+    @inlinable
     public static func checksum<Bytes: Swift::Collection>(_ bytes: Bytes) -> UInt32
     where Bytes.Element == Byte {
         var adler = RFC_1950.Adler32()
