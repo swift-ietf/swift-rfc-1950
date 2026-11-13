@@ -14,4 +14,4 @@ Use this package when you need to read or write zlib streams: DEFLATE data with 
 
 ## Cost
 
-- Decompression costs what swift-rfc-1951's decompression costs plus one Adler-32 pass. Adler-32 over contiguous bytes (an array, a slice, a buffer) runs in one tight loop at well over 1 GB/s on Apple silicon; other collections go byte by byte through their iterator.
+- Decompression costs what swift-rfc-1951's decompression costs plus one Adler-32 pass. Adler-32 over contiguous bytes (an array, a slice, a buffer) runs in one tight loop; other collections go byte by byte through their iterator.
