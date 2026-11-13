@@ -31,6 +31,11 @@ extension RFC_1950.Adler32 {
     public mutating func update<Bytes: Swift::Collection>(_ bytes: Bytes)
     where Bytes.Element == Byte {
 
+        let contiguous: Void? = bytes.withContiguousStorageIfAvailable { buffer in
+            unsafe update(contiguous: buffer)
+        }
+        guard contiguous == nil else { return }
+
         let chunkSize = 5552
 
         var iterator = bytes.makeIterator()
@@ -50,6 +55,25 @@ extension RFC_1950.Adler32 {
             s1 %= Self.base
             s2 %= Self.base
         }
+    }
+
+    @usableFromInline
+    mutating func update(contiguous buffer: UnsafeBufferPointer<Byte>) {
+        var a = s1
+        var b = s2
+        var index = 0
+        while index < buffer.count {
+            let end = min(index &+ 5552, buffer.count)
+            while index < end {
+                a &+= UInt32(unsafe buffer[index].underlying)
+                b &+= a
+                index &+= 1
+            }
+            a %= Self.base
+            b %= Self.base
+        }
+        s1 = a
+        s2 = b
     }
 
     public var value: UInt32 {
