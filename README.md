@@ -11,7 +11,4 @@ Use this package when you need to read or write zlib streams: DEFLATE data with 
 - `RFC_1950.unwrap(_:)` checks the header the same way but does not check the Adler-32 trailer. It returns the bytes between the header and the trailer.
 - `RFC_1950.wrap(deflated:level:originalData:into:)` takes the checksum from `originalData` and does not check that `deflated` is its compressed form.
 - `RFC_1950.Adler32` starts at 1, so the checksum of no bytes is 1. Feeding bytes in several `RFC_1950.Adler32.update(_:)` calls gives the same value as one call over all of them.
-
-## Cost
-
 - Decompression costs what swift-rfc-1951's decompression costs plus one Adler-32 pass. Adler-32 over contiguous bytes (an array, a slice, a buffer) runs in one tight loop; other collections go byte by byte through their iterator.
